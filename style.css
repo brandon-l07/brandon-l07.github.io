@@ -81,8 +81,10 @@ canvas {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 0; /* Must be lower than nav */
+  z-index: 0; /* Stay behind nav */
+  pointer-events: none; /* Critical line */
 }
+
 
 /* For nav links */
 .corner-link {
