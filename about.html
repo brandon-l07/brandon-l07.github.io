@@ -3,26 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400&display=swap" rel="stylesheet" />
-  <title>About-Brandon Lu</title>
+  <title>Test Audio</title>
   <style>
     #play-button {
       padding: 10px 20px;
-      font-family: 'Roboto Condensed', sans-serif;
       font-size: 16px;
-      margin-top: 20px;
       cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin-top: 20px;
+      display: inline-block;
     }
   </style>
 </head>
 <body>
   <h1>HELLO!</h1>
 
-  <!-- Optional Play Button for Safari -->
   <button id="play-button">Play Music</button>
 
   <audio id="bg-music" loop>
-    <source src="Music-Site/Rick Astley - Together Forever (Official Video) [4K Remaster].mp3" type="audio/mpeg" />
+    <source src="background.mp3" type="audio/mpeg" />
     Your browser does not support the audio element.
   </audio>
 
@@ -31,8 +33,13 @@
     const audio = document.getElementById('bg-music');
 
     button.addEventListener('click', () => {
-      audio.play();
-      button.style.display = 'none'; // hide button after play
+      console.log('Button clicked, playing audio...');
+      audio.play().then(() => {
+        console.log('Audio playing');
+        button.style.display = 'none';
+      }).catch((error) => {
+        console.error('Audio play error:', error);
+      });
     });
   </script>
 </body>
