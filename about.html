@@ -7,18 +7,22 @@
   <title>About-Brandon Lu</title>
 </head>
 <body>
-<audio id="bg-music" autoplay loop>
-  <source src="Music-Site/Bon Jovi - Living On A Prayer.mp3" type="audio/mpeg">
-  Your browser does not support the audio element.
-</audio>
-<h1>HELLO!</h1>
-  <script>
-  window.addEventListener('click', () => {
-    const audio = document.getElementById('bg-music');
-    if (audio.paused) {
-      audio.play();
-    }
-  }, { once: true });
-</script>
+  <h1>HELLO!</h1>
 
+  <!-- Background Music -->
+  <audio id="bg-music" autoplay loop>
+    <source src="Music-Site/Bon Jovi - Living On A Prayer.mp3" type="audio/mpeg" />
+    Your browser does not support the audio element.
+  </audio>
+
+  <!-- Autoplay user interaction fallback for browsers like Chrome -->
+  <script>
+    document.addEventListener('click', () => {
+      const audio = document.getElementById('bg-music');
+      if (audio && audio.paused) {
+        audio.play();
+      }
+    }, { once: true });
+  </script>
 </body>
+</html>
