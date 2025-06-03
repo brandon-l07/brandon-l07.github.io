@@ -71,8 +71,8 @@ h1 {
   justify-content: center;
   user-select: none;
   transition: all 0.4s ease-in-out;
-  opacity: 0;
   pointer-events: none;
+  opacity: 0;
   z-index: 10;
 }
 
@@ -94,6 +94,11 @@ canvas {
   font-size: 1.2em;
   z-index: 100; /* Higher than canvas */
   transition: opacity 0.3s;
+  pointer-events: auto;
+}
+
+.corner-link.visible {
+  opacity: 1;
   pointer-events: auto;
 }
 
