@@ -37,10 +37,10 @@ navElems["top-left"].textContent = "About";
 navElems["top-left"].setAttribute("href", "about.html");
 
 navElems["top-right"].textContent = "Blog";
-navElems["top-right"].setAttribute("href", "blog.html");
+navElems["top-right"].setAttribute("href", "https://x.com/brandonl_off");
 
 navElems["bottom-left"].textContent = "Projects";
-navElems["bottom-left"].setAttribute("href", "projects.html");
+navElems["bottom-left"].setAttribute("href", "project.html");
 
 navElems["bottom-right"].textContent = "Contact";
 navElems["bottom-right"].setAttribute("href", "contact.html");
