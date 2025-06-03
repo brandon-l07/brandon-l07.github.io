@@ -5,24 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400&display=swap" rel="stylesheet" />
   <title>About-Brandon Lu</title>
+  <style>
+    #play-button {
+      padding: 10px 20px;
+      font-family: 'Roboto Condensed', sans-serif;
+      font-size: 16px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
   <h1>HELLO!</h1>
 
-  <!-- Background Music -->
-  <audio id="bg-music" autoplay loop>
-    <source src="Music-Site/Rick Astley - Together Forever (Official Video) [4K Remaster].mp3" type="audio/mpeg" />
+  <!-- Optional Play Button for Safari -->
+  <button id="play-button">Play Music</button>
+
+  <audio id="bg-music" loop>
+    <source src="Music-Site/Rixton - Me and My Broken Heart (Official Video).mp3" type="audio/mpeg" />
     Your browser does not support the audio element.
   </audio>
 
-  <!-- Autoplay user interaction fallback for browsers like Chrome -->
   <script>
-    document.addEventListener('click', () => {
-      const audio = document.getElementById('bg-music');
-      if (audio && audio.paused) {
-        audio.play();
-      }
-    }, { once: true });
+    const button = document.getElementById('play-button');
+    const audio = document.getElementById('bg-music');
+
+    button.addEventListener('click', () => {
+      audio.play();
+      button.style.display = 'none'; // hide button after play
+    });
   </script>
 </body>
 </html>
+
