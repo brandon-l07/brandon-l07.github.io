@@ -102,7 +102,7 @@ function lerp(a, b, t) {
 
 // Music Player
 const paylist = [
-  '/Users/newuser/Downloads/Music-Folder/Round and Round (2007 Remaster).mp3',
+  'Music-Site/Round and Round (2007 Remaster).mp3',
 ];
 
 function shuffle(array) {
