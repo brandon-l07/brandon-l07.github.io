@@ -101,7 +101,8 @@ function lerp(a, b, t) {
 }
 
 // Music Player
-const paylist = [
+const playlist = [
+  'Music-Site/Round and Round (2007 Remaster).mp3',
 ];
 
 function shuffle(array) {
