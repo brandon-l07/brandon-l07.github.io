@@ -101,12 +101,8 @@ function lerp(a, b, t) {
 }
 
 // Music Player
-const playlist = [
-  'Music-Site/Abba - Dancing Queen (Official Music Video Remastered).mp3',
-  'Music-Site/Rick Astley - Together Forever (Official Video) [4K Remaster].mp3',
-  'Music-Site/Dschinghis Khan - Moskau (Starparade 14.06.1979).mp3',
-  'Music-Site/Redbone - Come and Get Your Love (Single Edit - Audio).mp3',
-  'Music-Site/Earth, Wind & Fire - September.mp3'
+const paylist = [
+  '/Users/newuser/Downloads/Music-Folder/Round and Round (2007 Remaster).mp3'
 ];
 
 function shuffle(array) {
