@@ -161,6 +161,7 @@ btn.addEventListener('click', togglePlayPause);
 audio.addEventListener('ended', () => {
   currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
   audio.src = playlist[currentTrackIndex];
+  audio.load();
   audio.play();
 });
 
