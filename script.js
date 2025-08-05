@@ -69,21 +69,12 @@ const faceRotations = {
   back: { x: 0, y: Math.PI },
 };
 
+// If you want stationary links, no dynamic hiding/updating is needed.
+// Keeping this function in case you want to later add subtle highlighting.
 function updateLinks(faceName) {
-  for (const corner in navElems) {
-    if (faceName in faceToNav && corner === faceToNav[faceName].corner) {
-      navElems[corner].textContent = faceToNav[faceName].text;
-      navElems[corner].classList.add("visible");
-      navElems[corner].style.backgroundColor = "transparent";
-      navElems[corner].style.color = "white";
-    } else {
-      navElems[corner].textContent = "";
-      navElems[corner].classList.remove("visible");
-      navElems[corner].style.backgroundColor = "black";
-      navElems[corner].style.color = "black";
-    }
-  }
+  // no-op: links remain constant and visible
 }
+
 
 const sequence = [
   { face: "right", label: "About" },
