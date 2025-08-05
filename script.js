@@ -103,6 +103,7 @@ function lerp(a, b, t) {
 // Music Player
 const playlist = [
   'Music-Site/Round and Round (2007 Remaster).mp3',
+  'Music-Site/Bon Jovi - Living On A Prayer.mp3',
 ];
 
 function shuffle(array) {
