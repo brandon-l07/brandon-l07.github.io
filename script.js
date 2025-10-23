@@ -91,12 +91,25 @@ function lerp(a, b, t) {
   return a + (b - a) * t;
 }
 
-// Music Player
+// Music Player Setup
 const playlist = [
   'music-site/background1.mp3',
   'music-site/background2.mp3',
 ];
 
+let currentTrackIndex = 0;
+let audio;
+let audioCtx;
+let analyser;
+let dataArray;
+let source;
+
+// Button elements
+const btn = document.getElementById('music-player-btn');
+const playIcon = document.getElementById('play-icon');
+const pauseIcon = document.getElementById('pause-icon');
+
+// Shuffle playlist once at start
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -105,40 +118,45 @@ function shuffle(array) {
 }
 shuffle(playlist);
 
-let currentTrackIndex = 0;
-const audio = new Audio();
-audio.src = playlist[currentTrackIndex];
-audio.preload = 'auto';
-audio.volume = 0.3;
+// Toggle Play/Pause
+btn.addEventListener('click', () => {
+  // Create AudioContext and audio on first user interaction
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-const btn = document.getElementById('music-player-btn');
-const playButton = document.getElementById("play-button");
-const pauseIcon = document.getElementById('pause-icon');
-const playIcon = document.getElementById('play-icon');
+    audio = new Audio();
+    audio.src = playlist[currentTrackIndex];
+    audio.volume = 0.3;
+    audio.loop = false;
 
-// Web Audio API setup
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-const source = audioCtx.createMediaElementSource(audio);
-const analyser = audioCtx.createAnalyser();
-source.connect(analyser);
-analyser.connect(audioCtx.destination);
-analyser.fftSize = 256;
-const bufferLength = analyser.frequencyBinCount;
-const dataArray = new Uint8Array(bufferLength);
+    source = audioCtx.createMediaElementSource(audio);
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 256;
+    source.connect(analyser);
+    analyser.connect(audioCtx.destination);
 
-// Play/pause toggle
-function togglePlayPause() {
-  if (audioCtx.state === 'suspended') {
-    audioCtx.resume();
+    const bufferLength = analyser.frequencyBinCount;
+    dataArray = new Uint8Array(bufferLength);
+
+    // Track change when ended
+    audio.addEventListener('ended', () => {
+      currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+      audio.src = playlist[currentTrackIndex];
+      audio.load();
+      audio.play();
+    });
   }
 
+  // Resume context if suspended
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+
+  // Play or pause
   if (audio.paused) {
     audio.play();
     btn.textContent = 'Curated by Brandon';
     btn.prepend(pauseIcon);
     pauseIcon.style.display = 'inline';
     playIcon.style.display = 'none';
-    rotationStartTime = performance.now();
   } else {
     audio.pause();
     btn.textContent = 'Play';
@@ -146,15 +164,6 @@ function togglePlayPause() {
     playIcon.style.display = 'inline';
     pauseIcon.style.display = 'none';
   }
-}
-btn.addEventListener('click', togglePlayPause);
-
-// Track change
-audio.addEventListener('ended', () => {
-  currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
-  audio.src = playlist[currentTrackIndex];
-  audio.load();
-  audio.play();
 });
 
 // Loading screen fade out
