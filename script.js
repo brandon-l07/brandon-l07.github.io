@@ -93,8 +93,8 @@ function lerp(a, b, t) {
 
 // Music Player
 const playlist = [
-  'Music-Site/Round and Round (2007 Remaster).mp3',
-  'Music-Site/Rush - Limelight.mp3',
+  'music-site/background1.mp3',
+  'music-site/background2.mp3',
 ];
 
 function shuffle(array) {
