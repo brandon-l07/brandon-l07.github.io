@@ -1,6 +1,3 @@
-if (performance.navigation.type === 0) {
-  sessionStorage.clear();
-}
 // Scene Setup
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -36,18 +33,6 @@ const navElems = {
   "bottom-right": document.getElementById("bottom-right"),
 };
 
-navElems["top-left"].textContent = "About";
-navElems["top-left"].setAttribute("href", "about.html");
-
-navElems["top-right"].textContent = "Blog";
-navElems["top-right"].setAttribute("href", "https://x.com/brandonl_off");
-
-navElems["bottom-left"].textContent = "Projects";
-navElems["bottom-left"].setAttribute("href", "project.html");
-
-navElems["bottom-right"].textContent = "Contact";
-navElems["bottom-right"].setAttribute("href", "contact.html");
-
 for (const corner in navElems) {
   const elem = navElems[corner];
   elem.classList.add("visible");
@@ -56,49 +41,12 @@ for (const corner in navElems) {
   elem.style.pointerEvents = "auto";
 }
 
-const faceToNav = {
-  right: { corner: "top-left", text: "About" },
-  front: { corner: "bottom-left", text: "Projects" },
-  top: { corner: "top-right", text: "Blog" },
-  back: { corner: "bottom-right", text: "Contact" },
-  left: { corner: "top-left", text: "About" },
-  bottom: { corner: "bottom-right", text: "Contact" }
-};
+/* =========================================================
+   MUSIC PLAYER
+   ========================================================= */
 
-const faceRotations = {
-  right: { x: 0, y: -Math.PI / 2 },
-  top: { x: Math.PI / 2, y: 0 },
-  front: { x: 0, y: 0 },
-  back: { x: 0, y: Math.PI },
-};
-
-// If you want stationary links, no dynamic hiding/updating is needed.
-// Keeping this function in case you want to later add subtle highlighting.
-function updateLinks(faceName) {
-  // no-op: links remain constant and visible
-}
-
-
-const sequence = [
-  { face: "right", label: "About" },
-  { face: "top", label: "News" },
-  { face: "front", label: "Projects" },
-  { face: "back", label: "Contact" },
-];
-
-let currentIndex = 0;
-const rotationDuration = 6000;
-let rotationStartTime = performance.now();
-
-function lerp(a, b, t) {
-  return a + (b - a) * t;
-}
-
-// Music Player
 const playlist = [
   'music-site/skyhigh.mp3',
- 'music-site/loop.mp3',
- 'music-site/happiernow.mp3',
 ];
 
 function shuffle(array) {
@@ -111,19 +59,19 @@ shuffle(playlist);
 
 let currentTrackIndex = 0;
 const audio = new Audio();
-audio.src = playlist[currentTrackIndex];
 audio.preload = 'auto';
 audio.volume = 0.3;
 
-// --- Restore playback state ---
+/* //// PERSISTENT MUSIC (NEW): restore state */
 const savedTime = parseFloat(sessionStorage.getItem("musicTime"));
 const wasPlaying = sessionStorage.getItem("musicPlaying") === "true";
 const savedTrack = parseInt(sessionStorage.getItem("musicTrack"));
 
 if (!isNaN(savedTrack)) {
   currentTrackIndex = savedTrack;
-  audio.src = playlist[currentTrackIndex];
 }
+
+audio.src = playlist[currentTrackIndex];
 
 audio.addEventListener("loadedmetadata", () => {
   if (!isNaN(savedTime)) {
@@ -132,20 +80,16 @@ audio.addEventListener("loadedmetadata", () => {
 
   if (wasPlaying) {
     document.addEventListener("click", () => {
-      document.addEventListener("click", () => {
-  if (wasPlaying) audio.play().catch(() => {});
-}, { once: true });
-
+      audio.play().catch(() => {});
     }, { once: true });
   }
 });
 
 const btn = document.getElementById('music-player-btn');
-const playButton = document.getElementById("play-button");
 const pauseIcon = document.getElementById('pause-icon');
 const playIcon = document.getElementById('play-icon');
 
-// Web Audio API setup
+// Web Audio API
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 const source = audioCtx.createMediaElementSource(audio);
 const analyser = audioCtx.createAnalyser();
@@ -155,11 +99,9 @@ analyser.fftSize = 256;
 const bufferLength = analyser.frequencyBinCount;
 const dataArray = new Uint8Array(bufferLength);
 
-// Play/pause toggle
+// Play / Pause
 function togglePlayPause() {
-  if (audioCtx.state === 'suspended') {
-    audioCtx.resume();
-  }
+  if (audioCtx.state === 'suspended') audioCtx.resume();
 
   if (audio.paused) {
     audio.play();
@@ -167,7 +109,6 @@ function togglePlayPause() {
     btn.prepend(pauseIcon);
     pauseIcon.style.display = 'inline';
     playIcon.style.display = 'none';
-    rotationStartTime = performance.now();
   } else {
     audio.pause();
     btn.textContent = 'Play';
@@ -186,78 +127,7 @@ audio.addEventListener('ended', () => {
   audio.play();
 });
 
-// Loading screen fade out
-window.addEventListener("load", function () {
-  const loadingScreen = document.getElementById("loading-screen");
-  loadingScreen.classList.add("fade-out");
-
-  setTimeout(() => {
-    loadingScreen.style.display = "none";
-  }, 10000);
-});
-
-// --- Color fading variables ---
-let currentRGB = { r: 0.0, g: 0.67, b: 1.0 }; // initial color normalized
-let targetRGB = { r: 0.0, g: 0.67, b: 1.0 };
-const fadeSpeed = 0.01; // lower = slower
-
-// Animation loop
-function animate(time = performance.now()) {
-  requestAnimationFrame(animate);
-
-  analyser.getByteFrequencyData(dataArray);
-
-  // Scale cube based on average frequency volume
-  let sum = 0;
-  for (let i = 0; i < bufferLength; i++) {
-    sum += dataArray[i];
-  }
-  const avg = sum / bufferLength;
-  const scale = 1 + avg / 256;
-  cube.scale.set(scale, scale, scale);
-
-  // Map frequency bands to RGB
-  let lowSum = 0, midSum = 0, highSum = 0;
-  for (let i = 0; i < bufferLength / 3; i++) lowSum += dataArray[i];
-  for (let i = bufferLength / 3; i < 2 * bufferLength / 3; i++) midSum += dataArray[i];
-  for (let i = 2 * bufferLength / 3; i < bufferLength; i++) highSum += dataArray[i];
-
-  const normLow = Math.min(lowSum / (bufferLength / 3) / 256, 1);
-  const normMid = Math.min(midSum / (bufferLength / 3) / 256, 1);
-  const normHigh = Math.min(highSum / (bufferLength / 3) / 256, 1);
-
-  targetRGB.r = lerp(currentRGB.r, normLow, 0.05);
-  targetRGB.g = lerp(currentRGB.g, normMid, 0.05);
-  targetRGB.b = lerp(currentRGB.b, normHigh, 0.05);
-
-  currentRGB.r += (targetRGB.r - currentRGB.r) * fadeSpeed;
-  currentRGB.g += (targetRGB.g - currentRGB.g) * fadeSpeed;
-  currentRGB.b += (targetRGB.b - currentRGB.b) * fadeSpeed;
-
-  const col = new THREE.Color(currentRGB.r, currentRGB.g, currentRGB.b);
-  const hsl = {};
-  col.getHSL(hsl);
-  cube.material.color.setHSL(hsl.h, 0.4, 0.7); // pastel tweak
-
-  // Rotation
-  const elapsed = time - rotationStartTime;
-  const t = Math.min(elapsed / rotationDuration, 1);
-  const nextIndex = (currentIndex + 1) % sequence.length;
-  const fromRot = faceRotations[sequence[currentIndex].face];
-  const toRot = faceRotations[sequence[nextIndex].face];
-  cube.rotation.x = lerp(fromRot.x, toRot.x, t);
-  cube.rotation.y = lerp(fromRot.y, toRot.y, t);
-
-  if (t === 1) {
-    currentIndex = nextIndex;
-    rotationStartTime = time;
-  }
-
-  updateLinks(sequence[currentIndex].face);
-  renderer.render(scene, camera);
-}
-
-// --- Save playback state ---
+/* //// PERSISTENT MUSIC (NEW): save state continuously */
 setInterval(() => {
   if (!audio.paused) {
     sessionStorage.setItem("musicTime", audio.currentTime);
@@ -267,5 +137,42 @@ setInterval(() => {
     sessionStorage.setItem("musicPlaying", "false");
   }
 }, 500);
+
+/* =========================================================
+   LOADING SCREEN
+   ========================================================= */
+
+window.addEventListener("load", function () {
+  const loadingScreen = document.getElementById("loading-screen");
+  loadingScreen.classList.add("fade-out");
+
+  setTimeout(() => {
+    loadingScreen.style.display = "none";
+  }, 10000);
+});
+
+/* =========================================================
+   ANIMATION LOOP
+   ========================================================= */
+
+let currentRGB = { r: 0.0, g: 0.67, b: 1.0 };
+let targetRGB = { r: 0.0, g: 0.67, b: 1.0 };
+const fadeSpeed = 0.01;
+
+function lerp(a, b, t) { return a + (b - a) * t; }
+
+function animate(time = performance.now()) {
+  requestAnimationFrame(animate);
+
+  analyser.getByteFrequencyData(dataArray);
+
+  let sum = 0;
+  for (let i = 0; i < bufferLength; i++) sum += dataArray[i];
+  const avg = sum / bufferLength;
+  const scale = 1 + avg / 256;
+  cube.scale.set(scale, scale, scale);
+
+  renderer.render(scene, camera);
+}
 
 animate();
