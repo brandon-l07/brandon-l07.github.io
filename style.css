@@ -24,7 +24,7 @@ h1 {
 
 /* Social Media Buttons */
 #instagram-container,
-#linkdln-container,{
+#linkdln-container {
   position: fixed;
   bottom: 3.5rem;
   transform: translateX(-50%);
@@ -32,12 +32,14 @@ h1 {
   user-select: none;
 }
 
+/* shift left of center */
 #instagram-container {
-  left: 50%;
+  left: calc(50% - 20px);
 }
 
+/* shift right of center */
 #linkdln-container {
-  left: 50%;
+  left: calc(50% + 20px);
 }
 
 #instagram-container img,
