@@ -70,11 +70,9 @@ const faceRotations = {
 };
 
 // If you want stationary links, no dynamic hiding/updating is needed.
-// Keeping this function in case you want to later add subtle highlighting.
 function updateLinks(faceName) {
   // no-op: links remain constant and visible
 }
-
 
 const sequence = [
   { face: "right", label: "About" },
@@ -91,22 +89,17 @@ function lerp(a, b, t) {
   return a + (b - a) * t;
 }
 
-// Music Player
+// --- Music Player ---
+
 const playlist = [
   'music-site/skyhigh.mp3',
   'music-site/loop.mp3',
   'music-site/happiernow.mp3'
 ];
 
-function shuffle(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-}
-shuffle(playlist);
+// Pick a random first track on page load
+let currentTrackIndex = Math.floor(Math.random() * playlist.length);
 
-let currentTrackIndex = 0;
 const audio = new Audio();
 audio.src = playlist[currentTrackIndex];
 audio.preload = 'auto';
@@ -139,7 +132,6 @@ function togglePlayPause() {
     btn.prepend(pauseIcon);
     pauseIcon.style.display = 'inline';
     playIcon.style.display = 'none';
-    rotationStartTime = performance.now();
   } else {
     audio.pause();
     btn.textContent = 'Play';
@@ -150,9 +142,14 @@ function togglePlayPause() {
 }
 btn.addEventListener('click', togglePlayPause);
 
-// Track change
+// Track change: pick a random next track, but not the same as current
 audio.addEventListener('ended', () => {
-  currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+  let nextIndex;
+  do {
+    nextIndex = Math.floor(Math.random() * playlist.length);
+  } while (nextIndex === currentTrackIndex && playlist.length > 1);
+
+  currentTrackIndex = nextIndex;
   audio.src = playlist[currentTrackIndex];
   audio.load();
   audio.play();
