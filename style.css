@@ -147,6 +147,28 @@ canvas {
   height: 20px;
 }
 
+/* Music Credit Link */
+#music-credit {
+  position: fixed;
+  top: calc(1rem + 52px); /* sits directly under the button */
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.65);
+  text-decoration: none;
+  z-index: 20; /* same layer as button */
+  font-family: 'Roboto Condensed', sans-serif;
+  transition: color 0.25s ease, opacity 0.25s ease;
+  opacity: 0.85;
+}
+
+/* subtle hover — keeps minimalist aesthetic */
+#music-credit:hover {
+  color: rgba(255,255,255,0.95);
+  opacity: 1;
+}
+
 /* Epilepsy Warning */
 #epilepsy-popup {
   position: fixed;
