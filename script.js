@@ -143,17 +143,42 @@ function togglePlayPause() {
 btn.addEventListener('click', togglePlayPause);
 
 // Track change: pick a random next track, but not the same as current
+// Track change: pick a random next track with smooth fade
 audio.addEventListener('ended', () => {
+  // Pick a random next track (not the same as current)
   let nextIndex;
   do {
     nextIndex = Math.floor(Math.random() * playlist.length);
   } while (nextIndex === currentTrackIndex && playlist.length > 1);
 
-  currentTrackIndex = nextIndex;
-  audio.src = playlist[currentTrackIndex];
-  audio.load();
-  audio.play();
+  const nextTrack = playlist[nextIndex];
+
+  // Fade out current track over 1 second
+  let fadeOutInterval = setInterval(() => {
+    if (audio.volume > 0.05) {
+      audio.volume -= 0.05;
+    } else {
+      clearInterval(fadeOutInterval);
+      audio.pause();
+      audio.src = nextTrack;
+      audio.load();
+      currentTrackIndex = nextIndex;
+
+      // Fade in next track
+      audio.volume = 0;
+      audio.play();
+      let fadeInInterval = setInterval(() => {
+        if (audio.volume < 0.3) {
+          audio.volume += 0.03;
+        } else {
+          audio.volume = 0.3;
+          clearInterval(fadeInInterval);
+        }
+      }, 50);
+    }
+  }, 50);
 });
+
 
 // Loading screen fade out
 window.addEventListener("load", function () {
