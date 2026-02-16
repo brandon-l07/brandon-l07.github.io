@@ -1,4 +1,4 @@
-// Scene Setup
+ // Scene Setup
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.z = 3;
@@ -93,8 +93,7 @@ function lerp(a, b, t) {
 
 // Music Player
 const playlist = [
-  'music-site/background1.mp3',
-  'music-site/background3.mp3',
+  'music-site/skyhigh.mp3',
 ];
 
 function shuffle(array) {
