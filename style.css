@@ -21,6 +21,17 @@ h1 {
   user-select: none;
   margin: 0;
 }
+/*credit links*/
+.credit {
+  color: rgba(255,255,255,0.75);
+  text-decoration: none;
+}
+
+.credit:hover {
+  color: white;
+  text-shadow: 0 0 6px rgba(255,255,255,0.6);
+}
+
 
 /* Social Media Buttons */
 #instagram-container,
