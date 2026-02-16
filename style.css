@@ -147,7 +147,7 @@ canvas {
   height: 20px;
 }
 
-  /* Music Credit Link */
+/* Music Credit Link */
 #music-credit {
   position: fixed;
   top: calc(1rem + 52px); /* sits under the button */
