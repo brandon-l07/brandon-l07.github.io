@@ -94,6 +94,8 @@ function lerp(a, b, t) {
 // Music Player
 const playlist = [
   'music-site/skyhigh.mp3',
+  'music-site/loop.mp3',
+  'music-site/happiernow.mp3'
 ];
 
 function shuffle(array) {
