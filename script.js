@@ -1,4 +1,7 @@
- // Scene Setup
+if (performance.navigation.type === 0) {
+  sessionStorage.clear();
+}
+// Scene Setup
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.z = 3;
@@ -113,9 +116,9 @@ audio.preload = 'auto';
 audio.volume = 0.3;
 
 // --- Restore playback state ---
-const savedTime = parseFloat(localStorage.getItem("musicTime"));
-const wasPlaying = localStorage.getItem("musicPlaying") === "true";
-const savedTrack = parseInt(localStorage.getItem("musicTrack"));
+const savedTime = parseFloat(sessionStorage.getItem("musicTime"));
+const wasPlaying = sessionStorage.getItem("musicPlaying") === "true";
+const savedTrack = parseInt(sessionStorage.getItem("musicTrack"));
 
 if (!isNaN(savedTrack)) {
   currentTrackIndex = savedTrack;
@@ -257,11 +260,11 @@ function animate(time = performance.now()) {
 // --- Save playback state ---
 setInterval(() => {
   if (!audio.paused) {
-    localStorage.setItem("musicTime", audio.currentTime);
-    localStorage.setItem("musicPlaying", "true");
-    localStorage.setItem("musicTrack", currentTrackIndex);
+    sessionStorage.setItem("musicTime", audio.currentTime);
+    sessionStorage.setItem("musicPlaying", "true");
+    sessionStorage.setItem("musicTrack", currentTrackIndex);
   } else {
-    localStorage.setItem("musicPlaying", "false");
+    sessionStorage.setItem("musicPlaying", "false");
   }
 }, 500);
 
