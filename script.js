@@ -103,24 +103,29 @@ let currentTrackIndex = Math.floor(Math.random() * playlist.length);
 const audio = new Audio();
 audio.src = playlist[currentTrackIndex];
 audio.preload = 'auto';
-audio.volume = 0.3;
+audio.volume = 0; // start muted for fade-in
 
 const btn = document.getElementById('music-player-btn');
 const playButton = document.getElementById("play-button");
 const pauseIcon = document.getElementById('pause-icon');
 const playIcon = document.getElementById('play-icon');
 
-// Web Audio API setup
+// Web Audio API setup with GainNode for normalization
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 const source = audioCtx.createMediaElementSource(audio);
 const analyser = audioCtx.createAnalyser();
+const gainNode = audioCtx.createGain();
+gainNode.gain.value = 0.3; // base volume
+
+// Connect nodes: source → analyser → gain → destination
 source.connect(analyser);
-analyser.connect(audioCtx.destination);
+analyser.connect(gainNode);
+gainNode.connect(audioCtx.destination);
 analyser.fftSize = 256;
 const bufferLength = analyser.frequencyBinCount;
 const dataArray = new Uint8Array(bufferLength);
 
-// Play/pause toggle
+// Play/pause toggle with initial fade-in
 function togglePlayPause() {
   if (audioCtx.state === 'suspended') {
     audioCtx.resume();
@@ -132,6 +137,16 @@ function togglePlayPause() {
     btn.prepend(pauseIcon);
     pauseIcon.style.display = 'inline';
     playIcon.style.display = 'none';
+
+    // Fade in initial track smoothly
+    let fadeInInterval = setInterval(() => {
+      if (audio.volume < 0.3) {
+        audio.volume += 0.03;
+      } else {
+        audio.volume = 0.3;
+        clearInterval(fadeInInterval);
+      }
+    }, 50);
   } else {
     audio.pause();
     btn.textContent = 'Play';
@@ -142,10 +157,8 @@ function togglePlayPause() {
 }
 btn.addEventListener('click', togglePlayPause);
 
-// Track change: pick a random next track, but not the same as current
-// Track change: pick a random next track with smooth fade
+// Track change: pick a random next track with fade and no immediate repeat
 audio.addEventListener('ended', () => {
-  // Pick a random next track (not the same as current)
   let nextIndex;
   do {
     nextIndex = Math.floor(Math.random() * playlist.length);
@@ -179,7 +192,6 @@ audio.addEventListener('ended', () => {
   }, 50);
 });
 
-
 // Loading screen fade out
 window.addEventListener("load", function () {
   const loadingScreen = document.getElementById("loading-screen");
@@ -201,13 +213,15 @@ function animate(time = performance.now()) {
 
   analyser.getByteFrequencyData(dataArray);
 
+  // --- Simple dynamic volume control ---
+  let sumVol = 0;
+  for (let i = 0; i < bufferLength; i++) sumVol += dataArray[i];
+  const avgVol = sumVol / bufferLength;
+  const normalizedGain = 0.15 + (0.3 - 0.15) * (1 - Math.min(avgVol / 256, 1));
+  gainNode.gain.setTargetAtTime(normalizedGain, audioCtx.currentTime, 0.05);
+
   // Scale cube based on average frequency volume
-  let sum = 0;
-  for (let i = 0; i < bufferLength; i++) {
-    sum += dataArray[i];
-  }
-  const avg = sum / bufferLength;
-  const scale = 1 + avg / 256;
+  const scale = 1 + avgVol / 256;
   cube.scale.set(scale, scale, scale);
 
   // Map frequency bands to RGB
