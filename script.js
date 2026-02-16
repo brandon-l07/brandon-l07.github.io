@@ -95,7 +95,10 @@ const playlist = [
   'music-site/talk.mp3',
   'music-site/loop.mp3',
   'music-site/toofargone.mp3',
-  'music-site/wyou.mp3'
+  'music-site/wyou.mp3',
+  'music-site/makefeel.mp3',
+  'music-site/roundaround.mp3',
+  'music-site/rush.mp3'
 ];
 
 // Pick a random first track on page load
