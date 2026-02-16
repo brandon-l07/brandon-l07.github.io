@@ -72,10 +72,20 @@ if (!isNaN(savedTrack)) {
 }
 
 audio.src = playlist[currentTrackIndex];
-
 audio.addEventListener("loadedmetadata", () => {
-  if (!isNaN(savedTime)) {
-    audio.currentTime = savedTime;
+
+  let resumeTime = savedTime;
+
+  // If user left near the end, skip to next track instead
+  if (!isNaN(savedTime) && audio.duration - savedTime < 1.5) {
+    currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+    audio.src = playlist[currentTrackIndex];
+    audio.load();
+    return;
+  }
+
+  if (!isNaN(resumeTime)) {
+    audio.currentTime = resumeTime;
   }
 
   if (wasPlaying) {
@@ -84,6 +94,7 @@ audio.addEventListener("loadedmetadata", () => {
     }, { once: true });
   }
 });
+
 
 const btn = document.getElementById('music-player-btn');
 const pauseIcon = document.getElementById('pause-icon');
@@ -127,16 +138,22 @@ audio.addEventListener('ended', () => {
   audio.play();
 });
 
-/* //// PERSISTENT MUSIC (NEW): save state continuously */
 setInterval(() => {
-  if (!audio.paused) {
-    sessionStorage.setItem("musicTime", audio.currentTime);
+  if (!audio.paused && audio.duration) {
+
+    // don't store last second explanation
+    if (audio.duration - audio.currentTime > 1.2) {
+      sessionStorage.setItem("musicTime", audio.currentTime);
+      sessionStorage.setItem("musicTrack", currentTrackIndex);
+    }
+
     sessionStorage.setItem("musicPlaying", "true");
-    sessionStorage.setItem("musicTrack", currentTrackIndex);
+
   } else {
     sessionStorage.setItem("musicPlaying", "false");
   }
 }, 500);
+
 
 /* =========================================================
    LOADING SCREEN
