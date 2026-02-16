@@ -20,8 +20,8 @@ h1 {
   z-index: 10;
   user-select: none;
   margin: 0;
+}
 
-/* Social Media Buttons */
 #instagram-container,
 #linkdln-container {
   position: fixed;
@@ -146,7 +146,7 @@ canvas {
   width: 20px;
   height: 20px;
 }
- 
+
 /* Epilepsy Warning */
 #epilepsy-popup {
   position: fixed;
