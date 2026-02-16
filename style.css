@@ -24,8 +24,7 @@ h1 {
 
 /* Social Media Buttons */
 #instagram-container,
-#linkdln-container,
-#x-container{
+#linkdln-container,{
   position: fixed;
   bottom: 3.5rem;
   transform: translateX(-50%);
@@ -41,13 +40,8 @@ h1 {
   left: 54%;
 }
 
-#x-container {
-  left: 50%;
-}
-
 #instagram-container img,
-#linkdln-container img,
-#x-container img{
+#linkdln-container img{
   width: 16px;
   height: 16px;
   filter: none;
