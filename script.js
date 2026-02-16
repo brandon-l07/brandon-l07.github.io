@@ -178,18 +178,59 @@ const fadeSpeed = 0.01;
 
 function lerp(a, b, t) { return a + (b - a) * t; }
 
+/* =========================================================
+   CUBE ROTATION SYSTEM (RESTORED)
+   ========================================================= */
+
+const faceRotations = {
+  right: { x: 0, y: -Math.PI / 2 },
+  top: { x: Math.PI / 2, y: 0 },
+  front: { x: 0, y: 0 },
+  back: { x: 0, y: Math.PI },
+};
+
+const sequence = [
+  { face: "right" },
+  { face: "top" },
+  { face: "front" },
+  { face: "back" },
+];
+
+let currentIndex = 0;
+const rotationDuration = 6000;
+let rotationStartTime = performance.now();
+
+
 function animate(time = performance.now()) {
   requestAnimationFrame(animate);
 
   analyser.getByteFrequencyData(dataArray);
 
+  // Beat scaling
   let sum = 0;
   for (let i = 0; i < bufferLength; i++) sum += dataArray[i];
   const avg = sum / bufferLength;
   const scale = 1 + avg / 256;
   cube.scale.set(scale, scale, scale);
 
+  /* ---- ROTATION ---- */
+  const elapsed = time - rotationStartTime;
+  const t = Math.min(elapsed / rotationDuration, 1);
+
+  const nextIndex = (currentIndex + 1) % sequence.length;
+  const fromRot = faceRotations[sequence[currentIndex].face];
+  const toRot = faceRotations[sequence[nextIndex].face];
+
+  cube.rotation.x = lerp(fromRot.x, toRot.x, t);
+  cube.rotation.y = lerp(fromRot.y, toRot.y, t);
+
+  if (t === 1) {
+    currentIndex = nextIndex;
+    rotationStartTime = time;
+  }
+
   renderer.render(scene, camera);
 }
+
 
 animate();
