@@ -22,6 +22,10 @@ h1 {
   margin: 0;
 }
 
+a:link, a:visited, a:hover, a:active {
+    color: white;
+}
+
 #instagram-container,
 #linkdln-container {
   position: fixed;
