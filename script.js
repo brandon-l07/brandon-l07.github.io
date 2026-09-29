@@ -37,7 +37,7 @@ navElems["top-left"].textContent = "About";
 navElems["top-left"].setAttribute("href", "about.html");
 
 navElems["top-right"].textContent = "Blog";
-navElems["top-right"].setAttribute("href", "https://x.com/brandonl_off");
+navElems["top-right"].setAttribute("href", "blog.html");
 
 navElems["bottom-left"].textContent = "Projects";
 navElems["bottom-left"].setAttribute("href", "project.html");
